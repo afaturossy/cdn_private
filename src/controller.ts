@@ -2,6 +2,7 @@ import https from "https";
 import { Request, Response } from "express";
 
 import fs from "fs";
+import DATAFILE from "./database";
 
 const reqFile = (req: Request, res: Response, filePath: string) => {
   const headers = {
@@ -13,7 +14,6 @@ const reqFile = (req: Request, res: Response, filePath: string) => {
     const newurl = url.replace("http://", "https://");
 
     const file = fs.createWriteStream(filePath);
-    let fileInfo: { mime: string; size: number } | null = null;
 
     const request = https.get(
       newurl,
@@ -30,23 +30,19 @@ const reqFile = (req: Request, res: Response, filePath: string) => {
 
         const contentType = response.headers["content-type"];
 
-        const size = response.headers["content-length"] || "0";
+        console.log(`add-- ${new Date().toString()} -> ${newurl}`);
 
-        const t = contentType || "image/jpeg";
-        console.log(`${newurl} - ${t}`);
-
-        fileInfo = {
-          mime: t,
-          size: parseInt(size, 10),
-        };
-
-        res.setHeader("Content-Type", t);
+        if (typeof contentType === "string")
+          res.setHeader("Content-Type", contentType);
+          res.setHeader("Cache-Control",'public, max-age=2592000')
 
         response.pipe(res);
         response.pipe(file);
       }
     );
-    file.on("finish", () => fileInfo);
+    file.on("finish", () => {
+      addDB({ url: url, path: filePath });
+    });
 
     request.on("error", function (e: Error) {
       fs.unlink(filePath, () => {
@@ -54,6 +50,10 @@ const reqFile = (req: Request, res: Response, filePath: string) => {
       });
     });
   }
+};
+
+const addDB = async (data: { url: string; path: string }) => {
+  await DATAFILE.create(data);
 };
 
 export { reqFile };
