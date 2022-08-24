@@ -38,10 +38,11 @@ const reqFile = (req: Request, res: Response, filePath: string) => {
 
         response.pipe(res);
         response.pipe(file);
+        addDB({ url: url, path: filePath });
       }
     );
     file.on("finish", () => {
-      addDB({ url: url, path: filePath });
+      
     });
 
     request.on("error", function (e: Error) {
