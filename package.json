@@ -1,0 +1,12 @@
+{
+  "name": "cdn_private",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1",
+    "sequelize": "^6.21.4",
+    "sqlite3": "^5.0.11",
+    "typescript": "^4.7.4"
+  }
+}
