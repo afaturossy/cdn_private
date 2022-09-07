@@ -3,4 +3,6 @@ public/*.jpg
 
 *.sqlite
 
+dist
+
 # ecosystem.config.js
