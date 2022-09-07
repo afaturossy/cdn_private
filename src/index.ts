@@ -13,7 +13,7 @@ app.get("/", async (req, res) => {
   const url = req.query.url || "";
 
   // pengecekan datafile exist
-  const r = await DATAFILE.findOne({ where: { url: url } });
+  const r = await DATAFILE.findOne({ where: { url: url } ,order:[["id","DESC"]]});
   if (r) {
     const filePath = path.resolve(r.path)
     res.setHeader("Cache-Control",'public, max-age=2592000')
