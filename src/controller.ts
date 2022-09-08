@@ -24,7 +24,7 @@ const reqFile = (req: Request, res: Response, filePath: string) => {
             new Error(`Failed to get '${url}' (${response.statusCode})`);
           });
 
-          res.send(null);
+          res.status(500).send(null);
           return;
         }
 
